@@ -3,7 +3,7 @@ import express from "express";
 
 //import files
 import Hotel from "../models/Hotel.js";
-
+import createError from "../utils/error.js";
 const router = express.Router();
 
 //CREATE
@@ -42,7 +42,9 @@ router.delete("/:id", async (req, res) => {
 });
 
 // GET
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
+  const failed = true;
+  if (failed) return next(createError(401, "not authenticated bro!"));
   try {
     const hotel = await Hotel.findById(req.params.id);
     res.status(200).json(hotel);
