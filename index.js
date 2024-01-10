@@ -33,6 +33,9 @@ mongoose.connection.on("connected", () => {
   console.log("MongoDB connected!");
 });
 
+//middleware
+app.use(express.json());
+
 //router
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
