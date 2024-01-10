@@ -1,0 +1,43 @@
+import User from "../models/User.js";
+import bcrypt from "bcrypt";
+import createError from "../utils/error.js";
+
+const registerHandler = async (req, res, next) => {
+  try {
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.password, salt);
+
+    const newUser = new User({
+      username: req.body.username,
+      email: req.body.email,
+      password: hash,
+    });
+
+    await newUser.save();
+    res.status(201).json("User has been created.");
+  } catch (err) {
+    next(err);
+  }
+};
+
+const loginHandler = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ username: req.body.username });
+    if (!user) return next(createError("Username is not found!", 404));
+
+    const isPasswordCorrect = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!isPasswordCorrect)
+      return next(createError("Wrong username or password!", 400));
+
+    const { password, isAdmin, ...otherDetails } = user._doc;
+
+    res.status(200).json(otherDetails);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { registerHandler, loginHandler };
