@@ -1,6 +1,14 @@
+//import packages
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+
+//import files
+import authRoute from "./routes/auth.js";
+import usersRoute from "./routes/users.js";
+import hotelsRoute from "./routes/hotels.js";
+import roomsRoute from "./routes/rooms.js";
+
 const app = express();
 dotenv.config();
 
@@ -25,7 +33,14 @@ mongoose.connection.on("connected", () => {
   console.log("MongoDB connected!");
 });
 
-app.listen(3000, () => {
+//router
+app.use("/api/auth", authRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/hotels", hotelsRoute);
+app.use("/api/rooms", roomsRoute);
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
   connect();
-  console.log(`Connected to backend!`);
+  console.log(`Connected to backend on http://localhost:${port}`);
 });
