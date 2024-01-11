@@ -2,6 +2,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 //import files
 import authRoute from "./routes/auth.js";
@@ -34,6 +35,7 @@ mongoose.connection.on("connected", () => {
 });
 
 //middleware
+app.use(cookieParser());
 app.use(express.json());
 
 //router

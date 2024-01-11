@@ -6,20 +6,34 @@ import {
   getUserByIdHandler,
   getAllUserHandler,
 } from "../controllers/users.js";
+import { verifyToken, verifyUser, verifyAdmin } from "../utils/verifyToken.js";
 const router = express.Router();
 
+//CEK VERIFY
+// router.get("/check-authentication", verifyToken, (req, res) => {
+//   res.send("hello user, youu are logged in!");
+// });
+
+// router.get("/check-user/:id", verifyUser, (req, res) => {
+//   res.send("hello user, you are logged in and you can delete your account");
+// });
+
+// router.get("/check-admin/:id", verifyAdmin, (req, res) => {
+//   res.send("hello user, you are logged in and you can delete all account");
+// });
+
 //CREATE
-router.post("/", addUserHandler);
+router.post("/", verifyUser, addUserHandler);
 
 //UPDATE
-router.put("/:id", updateUserHandler);
+router.put("/:id", verifyUser, updateUserHandler);
 
 //DELETE
-router.delete("/:id", deleteUserHandler);
+router.delete("/:id", verifyUser, deleteUserHandler);
 
 // GET
-router.get("/:id", getUserByIdHandler);
+router.get("/:id", verifyUser, getUserByIdHandler);
 
 //GET ALL
-router.get("/", getAllUserHandler);
+router.get("/", verifyAdmin, getAllUserHandler);
 export default router;
