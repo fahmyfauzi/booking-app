@@ -61,6 +61,26 @@ const countByCityHandler = async (req, res, next) => {
     res.status(200).json(list);
   } catch (err) {}
 };
+
+const countByTypeHandler = async (req, res, next) => {
+  try {
+    const hotelCount = await Hotel.countDocuments({ type: "hotel" });
+    const apartementCount = await Hotel.countDocuments({ type: "apartement" });
+    const resortCount = await Hotel.countDocuments({ type: "resort" });
+    const villaCount = await Hotel.countDocuments({ type: "villa" });
+    const cabinCount = await Hotel.countDocuments({ type: "cabin" });
+    res.status(200).json([
+      { type: "hotel", count: hotelCount },
+      { type: "apartements", count: apartementCount },
+      { type: "resorts", count: resortCount },
+      { type: "villas", count: villaCount },
+      { type: "cabins", count: cabinCount },
+    ]);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export {
   addHotelHandler,
   updateHotelHandler,
@@ -68,4 +88,5 @@ export {
   getHotelByIdHandler,
   getAllHotelHandler,
   countByCityHandler,
+  countByTypeHandler,
 };
