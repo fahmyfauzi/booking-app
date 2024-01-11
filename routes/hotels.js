@@ -8,6 +8,7 @@ import {
   deleteHotelHandler,
   getHotelByIdHandler,
   getAllHotelHandler,
+  countByCityHandler,
 } from "../controllers/hotel.js";
 import { verifyAdmin } from "../utils/verifyToken.js";
 const router = express.Router();
@@ -22,8 +23,12 @@ router.put("/:id", verifyAdmin, updateHotelHandler);
 router.delete("/:id", verifyAdmin, deleteHotelHandler);
 
 // GET
-router.get("/:id", getHotelByIdHandler);
+router.get("find/:id", getHotelByIdHandler);
 
 //GET ALL
 router.get("/", getAllHotelHandler);
+
+//COUNT BY CITI, TYPE
+router.get("/countByCity", countByCityHandler);
+
 export default router;
