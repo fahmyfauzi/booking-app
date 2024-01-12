@@ -1,4 +1,5 @@
 import Hotel from "../models/Hotel.js";
+import Room from "../models/Room.js";
 
 const addHotelHandler = async (req, res) => {
   const newHotel = new Hotel(req.body);
@@ -42,8 +43,15 @@ const getHotelByIdHandler = async (req, res, next) => {
 };
 
 const getAllHotelHandler = async (req, res) => {
+  const { min, max, limit, ...others } = req.query;
   try {
-    const hotels = await Hotel.find({});
+    const hotels = await Hotel.find({
+      ...others,
+      cheapestPrice: {
+        $gt: min || 1,
+        $lt: max || 99999,
+      },
+    }).limit(parseInt(limit, 10));
     res.status(200).json(hotels);
   } catch (err) {
     res.status(500).json();
@@ -81,6 +89,20 @@ const countByTypeHandler = async (req, res, next) => {
   }
 };
 
+const getHotelRoomsHandler = async (req, res, next) => {
+  try {
+    const hotel = await Hotel.findById(req.params.id);
+    const list = await Promise.all(
+      hotel.rooms.map((room) => {
+        return Room.findById(room);
+      })
+    );
+    res.status(200).json(list);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export {
   addHotelHandler,
   updateHotelHandler,
@@ -89,4 +111,5 @@ export {
   getAllHotelHandler,
   countByCityHandler,
   countByTypeHandler,
+  getHotelRoomsHandler,
 };
