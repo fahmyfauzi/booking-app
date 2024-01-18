@@ -1,0 +1,11 @@
+{
+  "rest-client.environmentVariables": {
+    "$shared": {},
+    "Local Evn": {
+      "hostname": "http://localhost:3000/api",
+      "userId": "65a8c8e2b49af34d6c192fdd",
+      "hotelId": "65a88bdbed7d9edbd055b313",
+      "roomId": "65a89ff34582d313337a1909"
+    }
+  }
+}

@@ -1,0 +1,185 @@
+
+### REGISTER USER
+POST {{hostname}}/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+     "username":"ujang",
+     "email":"ujang@csm.com",
+     "password":"password123"
+}
+
+
+### LOGIN USER
+POST {{hostname}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+     "username":"asep",
+     "password":"password123"
+}
+### GET ALL USER
+GET {{hostname}}/users HTTP/1.1
+
+### GET DETAIL USER
+GET {{hostname}}/users/{{userId}} HTTP/1.1
+
+### UPDATE USER
+PUT {{hostname}}/users/{{userId}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "ujang",
+  "email": "ujang123@csm.com",
+  "country": "Indonesia",
+  "img": "ujang.jpg",
+  "city": "Ciamis",
+  "phone": 628123123123,
+  "password": "password123"
+}
+
+### DELETED USER
+DELETE  {{hostname}}/users/65a8c744b49af34d6c192fcd HTTP/1.1
+
+### CREATED USER
+POST {{hostname}}/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "_id": "65a886f596842c89e2995245",
+  "username": "cek",
+  "email": "cek@csm.com",
+  "country": "Indonesia",
+  "img": "cek.jpg",
+  "city": "Majalengka",
+  "phone": 62821184130,
+  "password": "password123",
+  "isAdmin": false
+}
+
+
+### ADD NEW HOTEL
+POST {{hostname}}/hotels HTTP/1.1
+Content-Type: application/json
+
+{
+  "_id": "65a88bdbed7d9edbd055b313",
+  "name": "Oyo Syariah Bandung",
+  "type": "hotel",
+  "city": "Bandung",
+  "address": "jl. soekarno no 556 blok 3",
+  "distance": "5 km",
+  "photos": [
+    "oyo1.jpg",
+    "oyo2.jpg",
+    "oyo3.jpg"
+  ],
+  "title": "Hotel Nyaman Bandung",
+  "desc": "2 kamar , 1 kamar mandi dalam, free wifi",
+  "rating": 4,
+  "cheapestPrice": 250000,
+  "featured": false
+}
+
+### GET ALL HOTEL
+GET {{hostname}}/hotels?min=100&max=300000&limit=5 HTTP/1.1
+Content-Type: application/json
+
+### UPDATE HOTEL
+PUT {{hostname}}/hotels/{{hotelId}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "_id": "65a88bdbed7d9edbd055b313",
+  "name": "Oyo Syariah Tasikmalaya",
+  "type": "hotel",
+  "city": "Jakarta",
+  "address": "jl. soekarno no 556 blok 3",
+  "distance": "5 km",
+  "photos": [
+    "oyo1.jpg",
+    "oyo2.jpg",
+    "oyo3.jpg"
+  ],
+  "title": "Hotel Nyaman Bandung",
+  "desc": "2 kamar , 1 kamar mandi dalam, free wifi",
+  "rating": 4,
+  "cheapestPrice": 250000,
+  "featured": false
+}
+
+### DELETE HOTEL
+DELETE {{hostname}}/hotels/{{hotelId}} HTTP/1.1
+
+### FIND HOTEL
+GET {{hostname}}/hotels/find/65a88bdbed7d9edbd055b313 HTTP/1.1
+
+### COUNT BY CITY
+GET {{hostname}}/hotels/countByCity?cities=Jakarta,Bandung,Tasikmalaya,Ciamis
+
+### COUNT BY TYPE
+GET {{hostname}}/hotels/countByType HTTP/1.1
+
+### GET DETAIL HOTEL AND ROOM
+GET {{hostname}}/hotels/room/{{hotelId}} HTTP/1.1
+
+### ADD NEW ROOM
+POST {{hostname}}/rooms/{{hotelId}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "_id": "65a89ff34582d313337a1909",
+  "title": "Room Adem",
+  "price": 250000,
+  "maxPeople": 4,
+  "desc": "Room adem jauh dari jalan raya.",
+  "roomNumbers": [
+    {
+      "numbers:101": null
+    },
+    {
+      "numbers:102": null
+    },
+    {
+      "numbers:103": null
+    },
+    {
+      "numbers:104": null
+    }
+  ]
+}
+
+### UPDATE ROOM
+PUT {{hostname}}/rooms/{{roomId}}
+Content-Type: application/json
+
+{
+  "_id": "65a89ff34582d313337a1909",
+  "title": "Room Aman",
+  "price": 250000,
+  "maxPeople": 4,
+  "desc": "Room adem jauh dari jalan raya.",
+  "roomNumbers": [
+    {
+      "numbers:101": null
+    },
+    {
+      "numbers:102": null
+    },
+    {
+      "numbers:103": null
+    },
+    {
+      "numbers:104": null
+    }
+  ]
+}
+
+### GET ROOM DETAIL
+GET {{hostname}}/rooms/{{roomId}}
+
+### DELETE ROOM
+DELETE {{hostname}}/rooms/{{roomId}}/{{hotelId}}
+
+### GET ALL ROOM
+GET {{hostname}}/rooms

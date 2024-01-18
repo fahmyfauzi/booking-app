@@ -82,7 +82,7 @@ const router = express.Router();
  *                  title: Hotel Nyaman Bandung
  *                  desc: 2 kamar , 1 kamar mandi dalam, free wifi
  *                  rating: 4
- *                  rooms: idRoom1323
+ *                  rooms: 65a89ff34582d313337a1909
  *                  cheapestPrice: 250000
  *                  featured: false
  */
