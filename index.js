@@ -10,6 +10,10 @@ import usersRoute from "./routes/users.js";
 import hotelsRoute from "./routes/hotels.js";
 import roomsRoute from "./routes/rooms.js";
 
+//api documentation import
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+
 const app = express();
 dotenv.config();
 
@@ -38,11 +42,30 @@ mongoose.connection.on("connected", () => {
 app.use(cookieParser());
 app.use(express.json());
 
+const option = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Booking Hotel App",
+      description: "Node ExpressJS Booking Hotel App",
+    },
+    server: [
+      {
+        url: "http://localhost:3000",
+      },
+    ],
+  },
+  apis: ["./routes/*.js"],
+};
+
+const spec = swaggerJSDoc(option);
+
 //router
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);
+app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(spec));
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

@@ -44,14 +44,19 @@ const getHotelByIdHandler = async (req, res, next) => {
 
 const getAllHotelHandler = async (req, res) => {
   const { min, max, limit, ...others } = req.query;
+  let hotels;
   try {
-    const hotels = await Hotel.find({
-      ...others,
-      cheapestPrice: {
-        $gt: min || 1,
-        $lt: max || 99999,
-      },
-    }).limit(parseInt(limit, 10));
+    if (Object.keys(others).length === 0 && !min && !max) {
+      hotels = await Hotel.find().sort({ createdAt: -1 }).limit(limit, 5);
+    } else {
+      hotels = await Hotel.find({
+        ...others,
+        cheapestPrice: {
+          $gt: min || 1,
+          $lt: max || 99999,
+        },
+      }).limit(parseInt(limit, 10));
+    }
     res.status(200).json(hotels);
   } catch (err) {
     res.status(500).json();
