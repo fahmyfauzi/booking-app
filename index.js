@@ -12,7 +12,7 @@ import roomsRoute from "./routes/rooms.js";
 
 //api documentation import
 import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
+import swaggerUi, { serve } from "swagger-ui-express";
 
 const app = express();
 dotenv.config();
@@ -65,7 +65,15 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);
-app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(spec));
+app.use("/api/doc", swaggerUi.serve, swaggerUi.setup(spec));
+
+const port = process.env.PORT || 3000;
+
+//cek load balancer dengan nginx menggunakan multi sesrver docker
+app.get("/api/port", (req, res) => {
+  const data = `App running on PORT ${port}`;
+  res.send(data);
+});
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
@@ -78,7 +86,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-const port = process.env.PORT || 3000;
 app.listen(port, () => {
   connect();
   console.log(`Connected to backend on http://localhost:${port}`);
