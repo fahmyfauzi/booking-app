@@ -31,60 +31,58 @@ const router = express.Router();
  *                  - desc
  *                  - cheapestPrice
  *             properties:
- *                  id:
+ *                  _id:
  *                      type: string
  *                      description: The auto generate id of hotel collection
+ *                      example: 65a88bdbed7d9edbd055b313
  *                  name:
  *                       type: string
  *                       description: Hotel name
+ *                       example: Hotel Oyo Syariah Bandung
  *                  type:
  *                       type: string
  *                       description: Hotel type
+ *                       example: hotel
  *                  city:
  *                       type: string
  *                       description: City
+ *                       example: Bandung
  *                  address:
  *                       type: string
  *                       description: address
+ *                       example: JL. Soekarno No.456, Blok Harimau III
  *                  distance:
  *                       type: string
  *                       description: distance
+ *                       example: 58 KM
  *                  photos:
  *                       type: array
- *                       description: photos
+ *                       items:
+ *                        type: string
+ *                        format: binary
  *                  title:
  *                       type: string
  *                       description: title hotel
+ *                       example: Hotel Murah Nyaman
  *                  desc:
  *                       type: string
  *                       description: description hotel
+ *                       example: 3 Kasur, Kamar mandi dalam, Free Wifi
  *                  rating:
  *                       type: number
  *                       description: rating min 0 , max 5
+ *                       example: 4
  *                  rooms:
  *                        type: array,
  *                        description: rooms hotel
  *                  cheapestPrice:
  *                       type: number
  *                       description: cheapest price
+ *                       example: 130000
  *                  featured:
  *                       type: boolean
  *                       descriiption: featured hotel default false
- *
- *             example:
- *                  _id: 65a88bdbed7d9edbd055b313
- *                  name: Oyo Syariah Bandung
- *                  type: hotel
- *                  city: Bandung
- *                  address: jl. soekarno no 556 blok 3
- *                  distance: 5 km
- *                  photos: [oyo1.jpg, oyo2.jpg, oyo3.jpg]
- *                  title: Hotel Nyaman Bandung
- *                  desc: 2 kamar , 1 kamar mandi dalam, free wifi
- *                  rating: 4
- *                  rooms: 65a89ff34582d313337a1909
- *                  cheapestPrice: 250000
- *                  featured: false
+ *                       example: false
  */
 
 /**
@@ -103,7 +101,7 @@ const router = express.Router();
  *    requestBody:
  *      required: true
  *      content:
- *        application/json:
+ *        multipart/form-data:
  *          schema:
  *            $ref: '#components/schemas/Hotel'
  *    responses:
@@ -133,7 +131,7 @@ router.post("/", verifyAdmin, addHotelHandler);
  *    requestBody:
  *      required: true
  *      content:
- *        application/json:
+ *        multipart/form-data:
  *          schema:
  *            $ref: '#components/schemas/Hotel'
  *    responses:

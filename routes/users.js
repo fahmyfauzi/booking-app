@@ -75,17 +75,16 @@ router.post("/", verifyAdmin, addUserHandler);
 
 //DETAIL USER | GET USER BY ID
 router.get("/:id", verifyUser, getUserByIdHandler);
-
 /**
  * @swagger
  * /api/users/{id}:
  *  put:
- *    summary: update or edit user
+ *    summary: Update or edit user
  *    tags: [User]
  *    parameters:
  *      - in: path
  *        name: id
- *        description: Id user want to updated
+ *        description: ID of the user to be updated
  *        required: true
  *        schema:
  *          type: string
@@ -93,46 +92,44 @@ router.get("/:id", verifyUser, getUserByIdHandler);
  *    requestBody:
  *      required: true
  *      content:
- *        application/json:
+ *        multipart/form-data:
  *          schema:
  *            type: object
  *            properties:
  *              username:
  *                type: string
- *                description: username
+ *                description: Username
+ *                example: asep1
  *              email:
  *                type: string
- *                description: email
+ *                description: Email
+ *                example: asep1@csm.com
  *              country:
  *                type: string
- *                description: country
+ *                description: Country
+ *                example: Indonesia
  *              img:
  *                type: string
- *                description: photo profile
+ *                format: binary
  *              city:
  *                type: string
- *                description: city
+ *                description: City
+ *                example: Bogor
  *              phone:
  *                type: string
- *                description: phone
+ *                description: Phone
+ *                example: 082118418130
  *              password:
  *                 type: string
- *                 description: password
- *            example:
- *              username: asep
- *              email: asep123@csm.com
- *              country: Indonesia
- *              img: asep.jpg
- *              city: Tasikmalaya
- *              phone: 628212345789
- *              password: "password123"
+ *                 description: Password
+ *                 example: password123
  *    responses:
  *      200:
  *        description: Successfully updated.
- *
  *      500:
- *        description: something went wrong
+ *        description: Something went wrong.
  */
+
 //UPDATE
 router.put("/:id", verifyUser, updateUserHandler);
 

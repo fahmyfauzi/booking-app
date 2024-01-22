@@ -13,6 +13,7 @@ import roomsRoute from "./routes/rooms.js";
 //api documentation import
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi, { serve } from "swagger-ui-express";
+import fileUpload from "express-fileupload";
 
 const app = express();
 dotenv.config();
@@ -41,6 +42,14 @@ mongoose.connection.on("connected", () => {
 //middleware
 app.use(cookieParser());
 app.use(express.json());
+
+//middleware upload
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/temp/",
+  })
+);
 
 const option = {
   definition: {
