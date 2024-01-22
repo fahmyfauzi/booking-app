@@ -1,35 +1,124 @@
 import Hotel from "../models/Hotel.js";
 import Room from "../models/Room.js";
+import cloudinary from "../config/cloudinary.js";
+import createError from "../utils/error.js";
 
-const addHotelHandler = async (req, res) => {
-  const newHotel = new Hotel(req.body);
+const cloudinaryUpload = (photo) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.v2.uploader.upload(
+      photo.tempFilePath,
+      {
+        public_id: new Date().getTime().toString(),
+      },
+      (error, result) => {
+        if (error) {
+          console.error("Upload file error:", error);
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+  });
+};
+
+const addHotelHandler = async (req, res, next) => {
   try {
+    const newHotelData = new Hotel(req.body);
+    const { photos } = req.files;
+
+    let images = [];
+    if (photos && photos.length > 0) {
+      const uploadPromises = photos.map((photo) => cloudinaryUpload(photo));
+      images = await Promise.all(uploadPromises).catch((err) => {
+        console.error("Error during photo upload:", err);
+        throw err;
+      });
+    }
+
+    if (images.length > 0) {
+      newHotelData.photos = images.map((image) => image.public_id);
+    }
+
+    const newHotel = new Hotel(newHotelData);
     const savedHotel = await newHotel.save();
+
     res.status(201).json(savedHotel);
   } catch (err) {
     res.status(500).json(err);
   }
 };
 
-const updateHotelHandler = async (req, res) => {
+const updateHotelHandler = async (req, res, next) => {
   try {
+    const hotelId = req.params.id;
+    const hotelToUpdate = await Hotel.findById(hotelId);
+    const { photos } = req.files;
+
+    if (!hotelToUpdate) {
+      return next(createError(404, "Hotel not found!"));
+    }
+
+    let images = [];
+    if (photos && photos.length > 0) {
+      const deletePromises = hotelToUpdate.photos.map((photo) => {
+        cloudinary.uploader.destroy(photo);
+      });
+      images = await Promise.all(deletePromises).catch((err) => {
+        console.error("Error during photo delete:", err);
+        throw err;
+      });
+
+      const uploadPromises = photos.map((photo) => cloudinaryUpload(photo));
+      images = await Promise.all(uploadPromises).catch((err) => {
+        console.error("Error during photo upload:", err);
+        throw err;
+      });
+    }
+
     const updatedHotel = await Hotel.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
+      hotelId,
+      photos
+        ? {
+            $set: {
+              ...req.body,
+              photos: images.map((image) => image.public_id),
+            },
+          }
+        : { $set: { ...req.body } },
       { new: true }
     );
+
     res.status(200).json(updatedHotel);
   } catch (err) {
     res.status(500).json(err);
   }
 };
 
-const deleteHotelHandler = async (req, res) => {
+const deleteHotelHandler = async (req, res, next) => {
   try {
-    const deleteHotel = await Hotel.findByIdAndDelete(req.params.id);
+    const hotel = await Hotel.findById(req.params.id);
+
+    if (!hotel) {
+      next(createError(404, "Hotel not found!"));
+    }
+
+    let images = [];
+    if (hotel.photos) {
+      const deletePromises = hotel.photos.map((photo) =>
+        cloudinary.uploader.destroy(photo)
+      );
+
+      images = await Promise.all(deletePromises).catch((err) => {
+        console.log("error delete photos: ", err);
+        throw err;
+      });
+    }
+
+    await Hotel.findByIdAndDelete(hotel);
     res.status(200).json("Hotel has been deleted!");
   } catch (error) {
-    res.status(500).json(err);
+    res.status(500).json(error);
   }
 };
 
